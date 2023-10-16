@@ -28,15 +28,15 @@ public class UserService {
         // todo: check if the user is already present -> unique value from user
         Optional<User> storedUser = userRepository.findByEmailId(requestDto.getEmail());
         if(storedUser.isEmpty()) {
-            User user = User.builder()
-                    .email(requestDto.getEmail())
-                    .hashedPassword(requestDto.getPassword()).build();
+            User user = new User();
+            user.setPassword(requestDto.getPassword());
+            user.setEmail(requestDto.getEmail());
 
             User savedUser = userRepository.save(user);
 
             UserDto responseDto = new UserDto();
             responseDto.setEmail(savedUser.getEmail());
-            responseDto.setPassword(savedUser.getHashedPassword());
+            responseDto.setPassword(savedUser.getPassword());
 
             return responseDto;
         }
@@ -48,7 +48,7 @@ public class UserService {
         // todo: check if login details are correct or not
         User storedUser = userRepository.findByEmailId(loginDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("User with email: " + loginDto.getEmail() + " is not present."));
-        if(loginDto.getPassword().equals(storedUser.getHashedPassword()))
+        if(loginDto.getPassword().equals(storedUser.getPassword()))
             return new SessionDto();
         return null;
     }
