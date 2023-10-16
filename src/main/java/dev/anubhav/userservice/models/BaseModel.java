@@ -5,10 +5,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.util.Date;
-import java.util.UUID;
 
 @Getter
 @MappedSuperclass
