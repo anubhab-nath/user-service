@@ -15,7 +15,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "session")
+@Entity(name = "sessions")
 public class Session extends BaseModel {
 
     private String token;

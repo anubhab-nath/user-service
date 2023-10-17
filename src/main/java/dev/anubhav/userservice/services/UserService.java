@@ -15,18 +15,16 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
     }
 
     public UserDto createUser(UserDto requestDto) {
         System.out.println(requestDto);
         // todo: check if the user is already present -> unique value from user
-        Optional<User> storedUser = userRepository.findByEmailId(requestDto.getEmail());
+        Optional<User> storedUser = userRepository.findByEmail(requestDto.getEmail());
         if(storedUser.isEmpty()) {
             User user = new User();
             user.setPassword(requestDto.getPassword());
@@ -41,12 +39,12 @@ public class UserService {
             return responseDto;
         }
 
-        return modelMapper.map(storedUser, UserDto.class);
+        return UserDto.from(storedUser.get());
     }
 
     public SessionDto login(LoginDto loginDto) throws NotFoundException {
         // todo: check if login details are correct or not
-        User storedUser = userRepository.findByEmailId(loginDto.getEmail())
+        User storedUser = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("User with email: " + loginDto.getEmail() + " is not present."));
         if(loginDto.getPassword().equals(storedUser.getPassword()))
             return new SessionDto();

@@ -1,5 +1,6 @@
 package dev.anubhav.userservice.controller;
 
+import dev.anubhav.userservice.dtos.LoginRequestDto;
 import dev.anubhav.userservice.dtos.SignUpRequestDto;
 import dev.anubhav.userservice.dtos.UserDto;
 import dev.anubhav.userservice.services.AuthService;
@@ -22,7 +23,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<UserDto> signUp(@RequestBody SignUpRequestDto requestDto) {
-        UserDto userDto = authService.signUp(requestDto.getEmail(), requestDto.getPassword());
-        return ResponseEntity.ok(userDto);
+        UserDto responseDto = authService.signUp(requestDto.getEmail(), requestDto.getPassword());
+        return ResponseEntity.ok(responseDto);
+    }
+
+    public ResponseEntity<UserDto> login(@RequestBody LoginRequestDto requestDto) throws Exception {
+        UserDto responseDto = authService.login(requestDto.getEmail(), requestDto.getPassword());
+        return ResponseEntity.ok(responseDto);
     }
 }
