@@ -27,6 +27,7 @@ public class AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @PostMapping("/login")
     public ResponseEntity<UserDto> login(@RequestBody LoginRequestDto requestDto) throws Exception {
         UserDto responseDto = authService.login(requestDto.getEmail(), requestDto.getPassword());
         return ResponseEntity.ok(responseDto);

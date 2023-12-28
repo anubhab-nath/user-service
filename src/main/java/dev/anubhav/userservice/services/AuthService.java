@@ -7,9 +7,9 @@ import dev.anubhav.userservice.models.SessionStatus;
 import dev.anubhav.userservice.models.User;
 import dev.anubhav.userservice.repos.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMapAdapter;
 
@@ -21,19 +21,23 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
     public AuthService(
             UserRepository userRepository,
-            SessionRepository sessionRepository
+            SessionRepository sessionRepository,
+            BCryptPasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDto signUp(String email, String password) {
         User user = new User();
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
 
         User savedUser = userRepository.save(user);
         return UserDto.from(savedUser);
@@ -46,7 +50,7 @@ public class AuthService {
             throw new Exception("Invalid Email!!");
 
         User user = userOptional.get();
-        if(!user.getPassword().equals(password))
+        if(!passwordEncoder.matches(password, user.getPassword()))
             throw new Exception("Invalid Password!!");
 
         String token = RandomStringUtils.randomAlphanumeric(30);

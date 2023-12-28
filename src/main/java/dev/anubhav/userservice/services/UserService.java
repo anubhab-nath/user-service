@@ -6,7 +6,6 @@ import dev.anubhav.userservice.dtos.UserDto;
 import dev.anubhav.userservice.exceptions.NotFoundException;
 import dev.anubhav.userservice.models.User;
 import dev.anubhav.userservice.repos.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
